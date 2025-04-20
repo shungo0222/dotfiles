@@ -2,15 +2,6 @@
 return {
   "kdheepak/lazygit.nvim",
 
-  -- Lazy load when any of these commands are triggered
-  cmd = {
-    "LazyGit",
-    "LazyGitConfig",
-    "LazyGitCurrentFile",
-    "LazyGitFilter",
-    "LazyGitFilterCurrentFile",
-  },
-
   -- Required dependency
   dependencies = {
     "nvim-lua/plenary.nvim",
