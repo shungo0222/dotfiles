@@ -6,10 +6,9 @@ return {
 
 	-- 🔗 Required dependencies
 	dependencies = {
-		"nvim-lua/plenary.nvim", -- Utility functions
-		"nvim-tree/nvim-web-devicons", -- Optional: file type icons
-		"MunifTanjim/nui.nvim", -- UI components
-		-- "3rd/image.nvim", opts = {},        -- Optional: image preview support
+    "nvim-lua/plenary.nvim",        -- Utility functions
+    "nvim-tree/nvim-web-devicons",  -- Optional: file type icons
+    "MunifTanjim/nui.nvim",         -- UI components
 	},
 
 	lazy = false, -- Load on startup
@@ -22,8 +21,9 @@ return {
 		require("neo-tree").setup({
 			filesystem = {
 				filtered_items = {
-					hide_dotfiles = false,
-					hide_gitignored = true,
+          hide_dotfiles = false,      -- Show dotfiles (e.g., .env)
+          hide_gitignored = false,    -- Show files even if in .gitignore
+          hide_hidden = false,        -- Show hidden files like (5 hidden items)
 				},
 			},
 		})
