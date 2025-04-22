@@ -25,11 +25,11 @@ return {
     config = function()
       -- ⚠️ Global diagnostic display settings
       vim.diagnostic.config({
-        virtual_text = true,  -- Show inline diagnostic text
-        signs = true,         -- Show signs in the gutter
-        underline = true,     -- Underline problematic code
-        update_in_insert = false, -- Don't show diagnostics while typing
-        severity_sort = true, -- Sort by error/warning level
+        virtual_text = true,        -- Show inline diagnostic text
+        signs = true,               -- Show signs in the gutter
+        underline = true,           -- Underline problematic code
+        update_in_insert = false,   -- Don't show diagnostics while typing
+        severity_sort = true,       -- Sort by error/warning level
       })
 
       -- 🔌 LSP capabilities (used for cmp-nvim-lsp completion)
@@ -38,12 +38,14 @@ return {
 
       -- 🔧 on_attach: Set keymaps when an LSP server attaches to a buffer
       local on_attach = function(_, bufnr)
-        local opts = { buffer = bufnr }
+        local opts = function (desc)
+          return { buffer = bufnr, desc = desc }
+        end
 
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-        vim.keymap.set({ "n", "v" }, "<Leader>ca", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "<Leader>e", vim.diagnostic.open_float, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("LSP: Hover Documentation"))
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("LSP: Go to Definition"))
+        vim.keymap.set({ "n", "v" }, "<Leader>ca", vim.lsp.buf.code_action, opts("LSP: Code Action"))
+        vim.keymap.set("n", "<Leader>e", vim.diagnostic.open_float, opts("LSP: Show Diagnostics"))
       end
 
       -- 🧠 Setup for Lua language server
