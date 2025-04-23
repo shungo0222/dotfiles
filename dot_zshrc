@@ -98,6 +98,7 @@ plugins=(
   # 🖥️ Terminal Environment
   ssh                     # SSH host name completions
   tmux                    # Tmux integration helpers
+  starship                # Starship prompt integration
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -144,6 +145,9 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+
+# ✨ Initialize Starship prompt
+eval "$(starship init zsh)"
 
 # 🐢 Performance profiling (optional: use `zprof` to see results after shell startup)
 zmodload zsh/zprof
