@@ -111,6 +111,12 @@ source $ZSH/oh-my-zsh.sh
 # Add user-installed Python 3.8 binaries to PATH
 export PATH="$HOME/Library/Python/3.8/bin:$PATH"
 
+# Add Homebrew-installed Ruby to PATH
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
+# 💎 Ruby Gems binaries
+export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+
 # Add Tmuxifier to PATH
 export PATH="$HOME/.tmux/plugins/tmuxifier/bin:$PATH"
 
@@ -145,6 +151,12 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+
+# 🧾 Enable tab completion for `colorls`
+source "$(dirname "$(gem which colorls)")/tab_complete.sh"
+
+# 🏷️ Alias for colorls with recommended options
+alias lc="colorls -lA --sd"
 
 # ✨ Initialize Starship prompt
 eval "$(starship init zsh)"
