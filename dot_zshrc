@@ -108,6 +108,9 @@ source $ZSH/oh-my-zsh.sh
 ### ===============================
 
 # 📦 PATH Customizations
+# Add user-local binaries (Claude Code, etc.)
+export PATH="$HOME/.local/bin:$PATH"
+
 # Add user-installed Python 3.8 binaries to PATH
 export PATH="$HOME/Library/Python/3.8/bin:$PATH"
 
