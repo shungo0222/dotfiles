@@ -116,6 +116,14 @@ if [ ! -d "$HOME/.tmux/plugins/tmuxifier" ]; then
 fi
 
 # =============================================================================
+# TPM (Tmux Plugin Manager)
+# =============================================================================
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+    echo "🔌 Installing TPM (Tmux Plugin Manager)..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
+# =============================================================================
 # Claude Code CLI
 # =============================================================================
 if ! command -v claude &> /dev/null; then

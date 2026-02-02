@@ -154,6 +154,7 @@ The `run_once_install-packages.sh.tmpl` script automatically installs all requir
 - Starship prompt
 - colorls (Ruby gem)
 - Tmuxifier
+- TPM (Tmux Plugin Manager)
 - Claude Code CLI
 - Sets Zsh as default shell
 
