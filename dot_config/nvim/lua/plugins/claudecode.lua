@@ -29,8 +29,8 @@ return {
 
 	-- Plugin options
 	opts = {
-		-- Absolute path to Claude Code CLI
-		claude_path = "/Users/shungo/.local/bin/claude",
+		-- Path to Claude Code CLI (uses $HOME for portability across machines)
+		claude_path = vim.fn.expand("~/.local/bin/claude"),
 	},
 
 	-- Key mappings (all grouped under <leader>a = AI / Claude Code)
