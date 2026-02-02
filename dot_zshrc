@@ -114,11 +114,15 @@ export PATH="$HOME/.local/bin:$PATH"
 # Add user-installed Python 3.8 binaries to PATH
 export PATH="$HOME/Library/Python/3.8/bin:$PATH"
 
-# Add Homebrew-installed Ruby to PATH
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+# Add Homebrew-installed Ruby to PATH (macOS)
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+    export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+fi
 
-# 💎 Ruby Gems binaries
-export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+# 💎 Ruby Gems binaries (cross-platform)
+if command -v ruby &> /dev/null; then
+    export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+fi
 
 # Add Tmuxifier to PATH
 export PATH="$HOME/.tmux/plugins/tmuxifier/bin:$PATH"
