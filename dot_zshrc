@@ -165,6 +165,9 @@ source "$(dirname "$(gem which colorls)")/tab_complete.sh"
 # 🏷️ Alias for colorls with recommended options
 alias lc="colorls -lA --sd"
 
+# 🚀 KumoShogun: Quick connect to VM tmux session
+alias kumo='ssh -t kumo "tmux a -t main || tmux new -s main -c ~/workspaces/work"'
+
 # ✨ Initialize Starship prompt
 eval "$(starship init zsh)"
 
