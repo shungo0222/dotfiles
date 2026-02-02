@@ -1,0 +1,141 @@
+#!/bin/bash
+# =============================================================================
+# Environment Bootstrap Script
+# =============================================================================
+# This script runs once when `chezmoi apply` is executed on a new machine.
+# It installs all required tools to replicate the development environment.
+# =============================================================================
+
+set -e  # Exit on error
+
+echo "🚀 Starting environment setup..."
+
+# =============================================================================
+# Detect OS
+# =============================================================================
+OS="$(uname -s)"
+echo "📍 Detected OS: $OS"
+
+# =============================================================================
+# Package Installation (OS-specific)
+# =============================================================================
+if [ "$OS" = "Darwin" ]; then
+    # macOS - use Homebrew
+    echo "🍺 Installing packages via Homebrew..."
+
+    if ! command -v brew &> /dev/null; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    brew install git zsh fzf neovim tmux ruby node
+
+elif [ "$OS" = "Linux" ]; then
+    # Linux - use apt (Ubuntu/Debian)
+    echo "📦 Installing packages via apt..."
+
+    sudo apt update
+    sudo apt install -y \
+        git \
+        zsh \
+        fzf \
+        neovim \
+        tmux \
+        ruby-full \
+        nodejs \
+        npm \
+        curl \
+        build-essential \
+        locales
+
+    # Fix locale
+    sudo locale-gen en_US.UTF-8
+    sudo update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+fi
+
+# =============================================================================
+# Oh My Zsh
+# =============================================================================
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "🎨 Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# =============================================================================
+# Oh My Zsh Custom Plugins
+# =============================================================================
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+# zsh-syntax-highlighting
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
+    echo "📦 Installing zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
+
+# zsh-autosuggestions
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+    echo "📦 Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+fi
+
+# zsh-bat
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-bat" ]; then
+    echo "📦 Installing zsh-bat..."
+    git clone https://github.com/fdellwing/zsh-bat.git "$ZSH_CUSTOM/plugins/zsh-bat"
+fi
+
+# you-should-use
+if [ ! -d "$ZSH_CUSTOM/plugins/you-should-use" ]; then
+    echo "📦 Installing you-should-use..."
+    git clone https://github.com/MichaelAqworker/you-should-use.git "$ZSH_CUSTOM/plugins/you-should-use"
+fi
+
+# =============================================================================
+# Starship Prompt
+# =============================================================================
+if ! command -v starship &> /dev/null; then
+    echo "🚀 Installing Starship prompt..."
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+fi
+
+# =============================================================================
+# Ruby Gems
+# =============================================================================
+echo "💎 Installing Ruby gems..."
+gem install colorls --user-install
+
+# Add gem bin to PATH for this session
+export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+
+# =============================================================================
+# Tmuxifier
+# =============================================================================
+if [ ! -d "$HOME/.tmux/plugins/tmuxifier" ]; then
+    echo "🖥️ Installing Tmuxifier..."
+    git clone https://github.com/jimeh/tmuxifier.git "$HOME/.tmux/plugins/tmuxifier"
+fi
+
+# =============================================================================
+# Claude Code CLI
+# =============================================================================
+if ! command -v claude &> /dev/null; then
+    echo "🤖 Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
+
+# =============================================================================
+# Set Zsh as default shell
+# =============================================================================
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "🐚 Setting Zsh as default shell..."
+    if [ "$OS" = "Linux" ]; then
+        sudo chsh -s "$(which zsh)" "$(whoami)"
+    else
+        chsh -s "$(which zsh)"
+    fi
+fi
+
+echo ""
+echo "✅ Environment setup complete!"
+echo "🔄 Please restart your shell or run: exec zsh"
+echo ""
