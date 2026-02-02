@@ -1,5 +1,4 @@
 -- 🌳 Syntax highlighting & code structure parsing with Treesitter
--- Updated for Neovim 0.11+ (nvim-treesitter rewrite removes configs module)
 
 return {
 	"nvim-treesitter/nvim-treesitter",
@@ -11,39 +10,30 @@ return {
 	build = ":TSUpdate",
 
 	config = function()
-		local treesitter = require("nvim-treesitter")
+		require("nvim-treesitter.configs").setup({
+			-- 📋 Languages to install parsers for
+			ensure_installed = {
+				"lua", "vim", "vimdoc", "query",
+				"javascript", "typescript", "tsx",
+				"python", "go", "rust",
+				"html", "css", "json", "yaml", "toml",
+				"markdown", "markdown_inline",
+				"bash", "regex",
+				"gitcommit", "gitignore", "diff",
+			},
 
-		-- 📦 Setup treesitter (new API in 2025+ rewrite)
-		treesitter.setup()
+			-- 🔄 Auto-install missing parsers when entering buffer
+			auto_install = true,
 
-		-- 📋 Define languages to install parsers for
-		local languages = {
-			"lua", "vim", "vimdoc", "query",
-			"javascript", "typescript", "tsx",
-			"python", "go", "rust",
-			"html", "css", "json", "yaml", "toml",
-			"markdown", "markdown_inline",
-			"bash", "regex",
-			"gitcommit", "gitignore", "diff",
-		}
+			-- 🌈 Enable syntax highlighting
+			highlight = {
+				enable = true,
+			},
 
-		-- 🔄 Install parsers for specified languages
-		treesitter.install(languages)
-
-		-- 🌈 Enable syntax highlighting for all filetypes with parsers
-		-- Neovim 0.11+ uses vim.treesitter.start() for highlighting
-		vim.api.nvim_create_autocmd("FileType", {
-			callback = function(args)
-				-- Try to start treesitter highlighting if parser exists
-				pcall(vim.treesitter.start, args.buf)
-			end,
-		})
-
-		-- 🧾 Enable treesitter-based indentation
-		vim.api.nvim_create_autocmd("FileType", {
-			callback = function()
-				vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-			end,
+			-- 🧾 Enable treesitter-based indentation
+			indent = {
+				enable = true,
+			},
 		})
 	end,
 }
