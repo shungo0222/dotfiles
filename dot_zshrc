@@ -168,6 +168,9 @@ alias lc="colorls -lA --sd"
 # 🚀 CloudLab: Quick connect to VM tmux session
 alias cloudlab='ssh -t cloudlab "tmux a -t main || tmux new -s main -c ~/workspaces/work"'
 
+# ⚡ Claude Code: Skip permissions prompt
+alias ccc='claude --dangerously-skip-permissions'
+
 # ✨ Initialize Starship prompt
 eval "$(starship init zsh)"
 
