@@ -11,6 +11,10 @@
 # - Notification (permission_prompt): always notifies (needs user action)
 
 set -euo pipefail
+
+# Load local secrets (MOSHI_WEBHOOK_TOKEN etc.)
+# shellcheck disable=SC1090
+source "$HOME/.cloudlab-env" 2>/dev/null || true
 {{- if ne .chezmoi.os "darwin" }}
 
 MAC_HOST="shungo@100.92.249.114"
