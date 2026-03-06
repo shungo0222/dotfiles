@@ -31,6 +31,12 @@ if [ "$OS" = "Darwin" ]; then
     brew install git zsh fzf neovim tmux ruby node \
         mosh lazygit ripgrep fd bat jq htop gh docker
 
+    # CodexBar - AI coding tool usage monitor (menu bar app)
+    if ! brew list --cask codexbar &> /dev/null; then
+        echo "Installing CodexBar..."
+        brew install --cask steipete/tap/codexbar
+    fi
+
 elif [ "$OS" = "Linux" ]; then
     # Linux - use apt (Ubuntu/Debian)
     echo "Installing packages via apt..."

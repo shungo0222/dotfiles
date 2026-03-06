@@ -111,6 +111,7 @@ chezmoi update --apply
 |------|-------------|
 | **colorls** | Colorized `ls` with icons (aliased as `lc`) |
 | **Claude Code** | AI pair programming CLI |
+| **CodexBar** | macOS menu bar app for monitoring AI coding tool usage limits (macOS only) |
 
 ### Other
 
@@ -145,6 +146,7 @@ The `run_once_install-packages.sh.tmpl` script automatically installs all requir
 
 ### macOS (via Homebrew)
 - git, zsh, fzf, neovim, tmux, ruby, node
+- CodexBar (`brew install --cask steipete/tap/codexbar`) — AI usage limit monitor
 
 ### Linux (via apt)
 - git, zsh, fzf, neovim, tmux, ruby-full, nodejs, npm, curl, build-essential, locales
