@@ -45,9 +45,13 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
-  {{ if eq .chezmoi.os "darwin" }}"enabledPlugins": {
+{{- if eq .chezmoi.os "darwin" }}
+  "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high",
-  {{ end }}"skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "high"
+{{- else }}
+  "skipDangerousModePermissionPrompt": true
+{{- end }}
 }
