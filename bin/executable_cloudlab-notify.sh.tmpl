@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+{{- if eq .chezmoi.os "darwin" }}
+# cloudlab-notify.sh — Claude Code Hook notification script (Mac)
+{{- else }}
+# cloudlab-notify.sh — Claude Code Hook notification script (VM)
+# Notification channels:
+#   1. terminal-notifier via SSH to Mac (same UX as local Mac)
+#   2. Moshi Webhook API (→ iPhone push notification)
+{{- end }}
+# - Stop: only notifies if Claude worked for 60+ seconds (long tasks)
+# - Notification (permission_prompt): always notifies (needs user action)
+
+set -euo pipefail
+{{- if ne .chezmoi.os "darwin" }}
+
+MAC_HOST="shungo@100.92.249.114"
+ICON_DIR="/Users/shungo/bin/icons"
+{{- else }}
+
+ICON_DIR="$HOME/bin/icons"
+{{- end }}
+
+# Truncate text: max 3 lines, max 80 chars per line
+truncate_text() {
+  local text="$1"
+  local result
+  result=$(echo "$text" | head -3 | while IFS= read -r line; do
+    if [ ${#line} -gt 80 ]; then
+      echo "${line:0:77}..."
+    else
+      echo "$line"
+    fi
+  done)
+  local line_count
+  line_count=$(echo "$text" | wc -l | tr -d ' ')
+  if [ "$line_count" -gt 3 ]; then
+    result="${result}
+..."
+  fi
+  echo "$result"
+}
+
+payload=$(cat)
+
+event=$(echo "$payload" | jq -r '.hook_event_name // "Unknown"')
+cwd=$(echo "$payload" | jq -r '.cwd // ""')
+project=$(basename "$cwd")
+
+case "$event" in
+  Stop)
+    # Only notify if Claude worked for 60+ seconds
+    session_id=$(echo "$payload" | jq -r '.session_id // "default"')
+    TIMESTAMP_FILE="/tmp/claude-prompt-timestamp-${session_id}"
+    if [ -f "$TIMESTAMP_FILE" ]; then
+      PROMPT_TIME=$(cat "$TIMESTAMP_FILE")
+      CURRENT_TIME=$(date +%s)
+      ELAPSED=$((CURRENT_TIME - PROMPT_TIME))
+      if [ "$ELAPSED" -lt 60 ]; then
+        exit 0
+      fi
+    else
+      exit 0
+    fi
+    mins=$((ELAPSED / 60))
+    secs=$((ELAPSED % 60))
+    if [ "$mins" -gt 0 ]; then
+      elapsed_fmt="${mins}m${secs}s"
+    else
+      elapsed_fmt="${secs}s"
+    fi
+{{- if eq .chezmoi.os "darwin" }}
+    title="${project} — Task Complete (${elapsed_fmt})"
+{{- else }}
+    title="VM: ${project} — Task Complete (${elapsed_fmt})"
+{{- end }}
+    last_msg=$(echo "$payload" | jq -r '.last_assistant_message // ""')
+    if [ -z "$last_msg" ]; then
+      body="Task completed"
+    else
+      body=$(truncate_text "$last_msg")
+    fi
+    icon="${ICON_DIR}/complete.png"
+    sound="Glass"
+    ;;
+  Notification)
+{{- if eq .chezmoi.os "darwin" }}
+    session_id=$(echo "$payload" | jq -r '.session_id // "default"')
+    title="${project} — Action Required"
+{{- else }}
+    title="VM: ${project} — Action Required"
+{{- end }}
+    raw_msg=$(echo "$payload" | jq -r '.message // "Notification"')
+    body=$(truncate_text "$raw_msg")
+    icon="${ICON_DIR}/action.png"
+    sound="Basso"
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+{{- if eq .chezmoi.os "darwin" }}
+
+terminal-notifier \
+  -title "$title" \
+  -message "$body" \
+  -contentImage "$icon" \
+  -sound "$sound" \
+  -activate "com.googlecode.iterm2"
+{{- else }}
+
+# --- Mac notification via SSH + helper script ---
+jq -c -n \
+  --arg title "$title" \
+  --arg body "$body" \
+  --arg icon "$icon" \
+  --arg sound "$sound" \
+  '{title: $title, body: $body, icon: $icon, sound: $sound}' \
+  | ssh -o ConnectTimeout=5 "$MAC_HOST" /Users/shungo/bin/cloudlab-notify-receive.sh \
+  2>/dev/null || true
+{{- end }}
+
+# --- Moshi Webhook API (iPhone push notification) ---
+if [ -n "${MOSHI_WEBHOOK_TOKEN:-}" ]; then
+  curl -s -X POST "https://api.getmoshi.app/api/webhook" \
+    -H "Content-Type: application/json" \
+    -d "$(jq -n --arg token "$MOSHI_WEBHOOK_TOKEN" --arg title "$title" --arg message "$body" \
+      '{"token": $token, "title": $title, "message": $message}')" \
+    >/dev/null 2>&1 || true
+fi

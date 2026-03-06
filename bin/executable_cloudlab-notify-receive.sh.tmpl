@@ -1,0 +1,19 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+# cloudlab-notify-receive.sh — Receives JSON from VM via SSH, shows notification
+set -euo pipefail
+
+json=$(cat)
+
+title=$(echo "$json" | /opt/homebrew/bin/jq -r '.title // "Notification"')
+body=$(echo "$json" | /opt/homebrew/bin/jq -r '.body // ""')
+icon=$(echo "$json" | /opt/homebrew/bin/jq -r '.icon // ""')
+sound=$(echo "$json" | /opt/homebrew/bin/jq -r '.sound // "default"')
+
+/opt/homebrew/bin/terminal-notifier \
+  -title "$title" \
+  -message "$body" \
+  -contentImage "$icon" \
+  -sound "$sound" \
+  -activate "com.googlecode.iterm2"
+{{ end -}}

@@ -176,3 +176,6 @@ eval "$(starship init zsh)"
 
 # 🐢 Performance profiling (optional: use `zprof` to see results after shell startup)
 zmodload zsh/zprof
+
+# 🔔 Local secrets (not managed by chezmoi, not in repo)
+source ~/.cloudlab-env 2>/dev/null || true
