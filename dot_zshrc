@@ -92,9 +92,6 @@ plugins=(
   docker                  # Docker aliases and helpers
   docker-compose          # Docker Compose support
 
-  # ☁️ Cloud Tools
-  aws                     # AWS CLI auto-completion and helpers
-
   # 🖥️ Terminal Environment
   ssh                     # SSH host name completions
   tmux                    # Tmux integration helpers
@@ -110,9 +107,6 @@ source $ZSH/oh-my-zsh.sh
 # 📦 PATH Customizations
 # Add user-local binaries (Claude Code, etc.)
 export PATH="$HOME/.local/bin:$PATH"
-
-# Add user-installed Python 3.8 binaries to PATH
-export PATH="$HOME/Library/Python/3.8/bin:$PATH"
 
 # Add Homebrew-installed Ruby to PATH (macOS)
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
@@ -165,9 +159,8 @@ source "$(dirname "$(gem which colorls)")/tab_complete.sh"
 # 🏷️ Alias for colorls with recommended options
 alias lc="colorls -lA --sd"
 
-# 🚀 CloudLab: Quick connect to VM tmux session
-alias cloudlab='ssh -t cloudlab "tmux a -t main || tmux new -s main -c ~/workspaces/work"'
-
+# 🖥️ 新しい Mac mini (ShungoのMac mini)
+alias mini='ssh -t mini "tmux a -t orchestrator || tmux new -s orchestrator"'
 # ⚡ Claude Code: Skip permissions prompt
 alias ccc='claude --dangerously-skip-permissions'
 
@@ -176,6 +169,3 @@ eval "$(starship init zsh)"
 
 # 🐢 Performance profiling (optional: use `zprof` to see results after shell startup)
 zmodload zsh/zprof
-
-# 🔔 Local secrets (not managed by chezmoi, not in repo)
-source ~/.cloudlab-env 2>/dev/null || true

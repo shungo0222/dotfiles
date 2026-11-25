@@ -61,10 +61,9 @@ chezmoi update --apply
 - `copyfile` - Copy file contents to clipboard
 - `copypath` - Copy file path to clipboard
 
-**Container & Cloud:**
+**Container:**
 - `docker` - Docker aliases and helpers
 - `docker-compose` - Docker Compose support
-- `aws` - AWS CLI auto-completion
 
 **Terminal:**
 - `ssh` - SSH host completions
