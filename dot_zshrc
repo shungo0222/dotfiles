@@ -161,6 +161,10 @@ alias lc="colorls -lA --sd"
 
 # 🖥️ 新しい Mac mini (ShungoのMac mini)
 alias mini='ssh -t mini "tmux a -t orchestrator || tmux new -s orchestrator"'
+# 🖥️ Mac mini 2〜4
+alias mini2='ssh -t mini2 "/opt/homebrew/bin/tmux a -t orchestrator || /opt/homebrew/bin/tmux new -s orchestrator"'
+alias mini3='ssh -t mini3 "/opt/homebrew/bin/tmux a -t orchestrator || /opt/homebrew/bin/tmux new -s orchestrator"'
+alias mini4='ssh -t mini4 "/opt/homebrew/bin/tmux a -t orchestrator || /opt/homebrew/bin/tmux new -s orchestrator"'
 # ⚡ Claude Code: Skip permissions prompt
 alias ccc='claude --dangerously-skip-permissions'
 
